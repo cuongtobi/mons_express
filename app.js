@@ -1,8 +1,13 @@
 var express = require("express");
 var log = require("morgan");
 var bodyParser = require("body-parser");
+var db = require("./config/database");
+var router = express.Router();
+var monsterRoutes = require("./routes/monsters");
 
 var app = express();
+
+db();
 
 app.use(log("dev"));
 
@@ -25,11 +30,10 @@ app.use(function(error, req, res, next){
   }
 });
 
-app.use("/", function(req, res, next) {
-  res.send("hello");
-})
+app.use("/", router);
+monsterRoutes(router);
 
-var port = 8080;
-app.listen(port, function(){
+var port = require("./config/properties").port;
+app.listen(port, function() {
   console.log("connected on port " + port);
 });
